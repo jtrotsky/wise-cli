@@ -22,11 +22,11 @@ func main() {
 
 	sourceCurrency := "NZD"
 	targetCurrency := "AUD"
-	targetAmount := 100
+	targetAmount := 100.0000
 
 	quote, err := quote.Get(sourceCurrency, targetCurrency, targetAmount)
 	if err != nil {
-		log.Fatalf(err)
+		log.Fatal(err)
 	}
 	fmt.Println(quote)
 }
