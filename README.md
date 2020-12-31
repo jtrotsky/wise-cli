@@ -8,12 +8,17 @@
 
 ### usage
 ```
--k --api-key Your secret API key 
-```
+play with the Wise API
 
-### example
-```
-./wise-cli login --api-key <YOUR-API-SECRET-KEY-HERE> 
-./wise-cli listen
-./wise-cli trigger balance.deposit
+Usage:
+  wise quote create --api-key <YOUR-API-SECRET-KEY-HERE> --to AUD --from NZD --amount 100
+
+Flags:
+  -h, --help   help for using wise
+
+Additional help topics:
+  wise quote  List quote commands
+  wise transfer List transfer commands
+  wise recipient List recipient commands
+  wise balance List balance commands
 ```
