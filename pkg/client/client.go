@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jtrotsky/wise-cli/pkg/cmd/wise"
 	"github.com/jtrotsky/wise-cli/pkg/quote"
 )
 
@@ -19,12 +18,14 @@ func New() Client {
 }
 
 // Run uses the right factory to complete the action requested
-func (c *Client) Run(command *wise.Command) error {
+func (c *Client) Run(action string) {
 	sourceCurrency := "NZD"
 	targetCurrency := "AUD"
 	targetAmount := 100
 
-	quote, err := quote.Prepare(sourceCurrency, targetCurrency, targetAmount)
+	quote := quote.Prepare(sourceCurrency, targetCurrency, targetAmount)
+
+	err := quote.Create()
 	if err != nil {
 		log.Fatal(err)
 	}
