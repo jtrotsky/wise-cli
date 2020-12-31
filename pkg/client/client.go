@@ -1,12 +1,5 @@
 package client
 
-import (
-	"fmt"
-	"log"
-
-	"github.com/jtrotsky/wise-cli/pkg/quote"
-)
-
 // Client contains the authorisation and config for the Wise account
 type Client struct {
 	Config *WiseConfig
@@ -18,17 +11,17 @@ func New() Client {
 }
 
 // Run uses the right factory to complete the action requested
-func (c *Client) Run(action string) {
-	sourceCurrency := "NZD"
-	targetCurrency := "AUD"
-	targetAmount := 100
+// func (c *Client) Run(action string) {
+// 	sourceCurrency := "NZD"
+// 	targetCurrency := "AUD"
+// 	targetAmount := 100
 
-	quote := quote.Prepare(sourceCurrency, targetCurrency, targetAmount)
+// 	quote := quote.Prepare(sourceCurrency, targetCurrency, targetAmount)
 
-	err := quote.Create()
-	if err != nil {
-		log.Fatal(err)
-	}
+// 	err := quote.Create()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	fmt.Println(quote)
-}
+// 	fmt.Println(quote)
+// }

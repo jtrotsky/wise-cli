@@ -21,7 +21,7 @@ type Command struct {
 
 // NewCommand reads a user input and creates a commend to be executed.
 func NewCommand(name string) *cobra.Command {
-	config := client.LoadConfig()
+	// config := client.LoadConfig()
 
 	command := &cobra.Command{
 		Use:   name,
@@ -31,15 +31,15 @@ func NewCommand(name string) *cobra.Command {
 		//  - a subcommand defines its own PersistentPreRun function
 		//  - the command is run without arguments or with --help and only prints the usage info
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			features.Enable(config.Features()...)
-			features.Enable(cmdFeatures...)
+			// features.Enable(config.Features()...)
+			// features.Enable(cmdFeatures...)
 		},
 	}
 
 	command.AddCommand(
-		quote.NewCommand(),
-		transfer.NewCommand(),
+		newQuoteCmd().cmd,
+		// transfer.newTransferCmd(),
 	)
 
-	return &command
+	return command
 }
