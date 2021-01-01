@@ -11,7 +11,7 @@
 play with the Wise API
 
 Usage:
-  wise quote create --api-key <YOUR-API-SECRET-KEY-HERE> --to AUD --from NZD --amount 100
+  wise quote create --api-key <YOUR-API-SECRET-KEY-HERE> --to AUD --from NZD --sourceAmount 100
 
 Flags:
   -h, --help   help for using wise
