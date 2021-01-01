@@ -1,6 +1,8 @@
 ## wise-cli
 
 ### why
+Help you integrate Wise into your application.
+
 - get and display quotes 
 - view / transfer between balances 
 - add / update / delete recipients 
