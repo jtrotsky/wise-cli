@@ -5,12 +5,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jtrotsky/wise-cli/pkg/cmd"
+	"github.com/jtrotsky/wise-cli/pkg/cmd/wise"
 )
 
 func main() {
-	base := filepath.Base(os.Args[0])
-	err := cmd.NewCommand(base).Execute()
+	cliRoot := filepath.Base(os.Args[0])
+	err := wise.NewCommand(cliRoot).Execute()
 	if err != nil {
 		log.Fatal(err)
 	}
