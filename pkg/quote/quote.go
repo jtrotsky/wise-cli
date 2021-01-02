@@ -3,6 +3,7 @@ package quote
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jtrotsky/wise-cli/pkg/util"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -178,15 +179,17 @@ func (q *Quote) create(client *client.Client) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	prettyJSON, nil := json.MarshalIndent(q, "", "\t")
-	fmt.Printf("%s", prettyJSON)
+	fmt.Print("\n")
+	// Print ASCII exchange rate plot
+	util.ExchangeRateGraph(client, q.SourceCurrency, q.TargetCurrency)
 
 	// calculate time until the delivery estimate
-	deliveryTime := util.calcDeliveryTime(q.DeliveryEstimate)
+	deliveryTime := util.CalculateDeliveryTime(q.DeliveryEstimate)
 
-	fmt.Printf("\n\n%.2f %s will arrive in %dh for %.0f %s sent at %f",
-		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours(), q.SourceAmount, q.SourceCurrency, q.Rate)
+	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
+		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
+	fmt.Printf("\n -> %.2f %s will arrive in %.0fh\n",
+		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours())
 
 	return nil
 }
