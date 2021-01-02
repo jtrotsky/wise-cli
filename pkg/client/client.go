@@ -53,12 +53,15 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 	}
 
 	// DEBUG: remove
-	fmt.Printf("\n %s %s\n\n", method, url.String())
+	// fmt.Printf("%s %s\n", method, url.String())
 
 	response, err := client.httpClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: checkErrors
+	// {"timestamp":"2021-01-02T12:57:07.659+0000","status":400,"error":"Bad Request","message":"Bad Request","path":"/v1/rates/"}
 
 	return response, nil
 }
