@@ -1,6 +1,9 @@
 package transfer
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/jtrotsky/wise-cli/pkg/client"
 	"github.com/spf13/cobra"
 )
@@ -30,9 +33,9 @@ func NewCreateCommand(client *client.Client, action string) *cobra.Command {
 		Args:    cobra.NoArgs,
 		Short:   "Create a transfer",
 		Example: "wise transfer create --quote-id 325346345",
-		// Run: func(c *cobra.Command, args []string) {
-		// 	o.Run(c, client)
-		// },
+		Run: func(c *cobra.Command, args []string) {
+			o.Run(c, client)
+		},
 	}
 
 	c.Flags().StringVar(&o.quoteID, "quote-id", "", "The quote to create a transfer from")
@@ -50,4 +53,15 @@ type CreateOptions struct {
 // NewCreateOptions ...
 func NewCreateOptions() *CreateOptions {
 	return &CreateOptions{}
+}
+
+// Run ...
+func (o *CreateOptions) Run(cmd *cobra.Command, client *client.Client) error {
+	if o.quoteID == "" {
+		log.Fatal("Provide a quote to create a tranfer from")
+	}
+
+	fmt.Printf("new transfer created from quote: %s", o.quoteID)
+
+	return nil
 }

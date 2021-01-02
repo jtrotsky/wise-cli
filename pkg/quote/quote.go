@@ -182,5 +182,11 @@ func (q *Quote) create(client *client.Client) error {
 	prettyJSON, nil := json.MarshalIndent(q, "", "\t")
 	fmt.Printf("%s", prettyJSON)
 
+	// calculate time until the delivery estimate
+	deliveryTime := util.calcDeliveryTime(q.DeliveryEstimate)
+
+	fmt.Printf("\n\n%.2f %s will arrive in %dh for %.0f %s sent at %f",
+		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours(), q.SourceAmount, q.SourceCurrency, q.Rate)
+
 	return nil
 }
