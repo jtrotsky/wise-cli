@@ -1,8 +1,7 @@
 ## wise-cli
 
 ### why
-Help you integrate Wise into your application.
-
+Help you integrate the Wise API into your application.
 - get and display quotes 
 - view / transfer between balances 
 - add / update / delete recipients 
@@ -13,7 +12,7 @@ Help you integrate Wise into your application.
 play with the Wise API
 
 Usage:
- wise quote create --api-key <YOUR-API-SECRET-KEY-HERE> --to NZD --from GBP --sourceAmount 100
+ wise quote create --to NZD --from GBP --amount 100 --api-key <YOUR-API-SECRET-KEY-HERE> 
 
  1.91 ┤╭╮   ╭╮╭─╮      ╭╮         ╭─╮
  1.90 ┼╯╰╮╭─╯╰╯ ╰─╮ ╭──╯│     ╭─╮╭╯ ╰
