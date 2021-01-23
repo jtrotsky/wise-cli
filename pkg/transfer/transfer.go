@@ -5,63 +5,48 @@ import (
 	"log"
 
 	"github.com/jtrotsky/wise-cli/pkg/client"
-	"github.com/spf13/cobra"
 )
 
-// NewCommand ...
-func NewCommand(client client.Client) *cobra.Command {
-	c := &cobra.Command{
-		Use:   "transfer",
-		Short: "Work with transfers",
-		Long:  "Work with transfers",
+// Transfer creates a fixed record of a to and from currency and amount which can later be used to
+// create a transfer https://api-docs.transferwise.com/#quotes-create
+type Transfer struct {
+	QuoteID string `json:"quote_id,omitempty"`
+	// SourceCurrency         string     `json:"source,omitempty"`
+	// TargetCurrency         string     `json:"target,omitempty"`
+	// SourceAmount           float64    `json:"sourceAmount,omitempty"`
+	// TargetAmount           float64    `json:"targetAmount,omitempty"`
+	// Rate                   float64    `json:"rate,omitempty"`
+	// Type                   string     `json:"type,omitempty"`
+	// RateType               string     `json:"rateType,omitempty"`
+	// CreatedTime            time.Time  `json:"createdTime,omitempty"`
+	// CreatedByUserID        string     `json:"createdByUserId,omitempty"`
+	// Profile                int64      `json:"profile,omitempty"`
+	// DeliveryEstimate       time.Time  `json:"deliveryEstimate,omitempty"`
+	// Fee                    float64    `json:"fee,omitempty"`
+	// FeeDetails             FeeDetails `json:"feeDetails,omitempty"`
+	// AllowedProfileTypes    []string   `json:"allowedProfileTypes,omitempty"`
+	// GuaranteedTargetAmount bool       `json:"GuaranteedTargetAmount,omitempty"`
+	// OfSourceAmount         bool       `json:"OfSourceAmount,omitempty"`
+}
+
+// {
+
+// }
+
+// Prepare ...
+func Prepare(profileID int64, quoteID string) *Transfer {
+	return &Transfer{
+		QuoteID: quoteID,
 	}
-
-	c.AddCommand(
-		NewCreateCommand(&client, "create"),
-	// NewGetCommand(f, "get"),
-	)
-
-	return c
 }
 
-// NewCreateCommand creates a new quote
-func NewCreateCommand(client *client.Client, action string) *cobra.Command {
-	o := NewCreateOptions()
-
-	c := &cobra.Command{
-		Use:     action,
-		Args:    cobra.NoArgs,
-		Short:   "Create a transfer",
-		Example: "wise transfer create --quote-id 325346345",
-		Run: func(c *cobra.Command, args []string) {
-			o.Run(c, client)
-		},
-	}
-
-	c.Flags().StringVar(&o.quoteID, "quote-id", "", "The quote to create a transfer from")
-
-	return c
-}
-
-// CreateOptions ...
-type CreateOptions struct {
-	quoteID string
-
-	client client.Client
-}
-
-// NewCreateOptions ...
-func NewCreateOptions() *CreateOptions {
-	return &CreateOptions{}
-}
-
-// Run ...
-func (o *CreateOptions) Run(cmd *cobra.Command, client *client.Client) error {
-	if o.quoteID == "" {
+// Create ...
+func (t *Transfer) Create(client *client.Client) error {
+	if t.QuoteID == "" {
 		log.Fatal("Provide a quote to create a tranfer from")
 	}
 
-	fmt.Printf("new transfer created from quote: %s", o.quoteID)
+	fmt.Printf("new transfer created from quote: %s", t.QuoteID)
 
 	return nil
 }

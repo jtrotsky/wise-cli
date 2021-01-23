@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/jtrotsky/wise-cli/pkg/client"
-	"github.com/spf13/cobra"
 )
 
 // Quote creates a fixed record of a to and from currency and amount which can later be used to
@@ -71,87 +70,8 @@ type FeeDetails struct {
 //   "ofSourceAmount": true
 // }
 
-// NewCommand ...
-func NewCommand(client client.Client) *cobra.Command {
-	c := &cobra.Command{
-		Use:   "quote",
-		Short: "Work with quotes",
-		Long:  "Work with quotes",
-	}
-
-	c.AddCommand(
-		NewCreateCommand(&client, "create"),
-		// NewGetCommand(f, "get"),
-		// NewDescribeCommand(f, "describe"),
-		// NewDeleteCommand(f, "delete"),
-	)
-
-	return c
-}
-
-// NewCreateCommand creates a new quote
-func NewCreateCommand(client *client.Client, action string) *cobra.Command {
-	o := NewCreateOptions()
-
-	c := &cobra.Command{
-		Use:     action,
-		Args:    cobra.NoArgs,
-		Short:   "Create a quote",
-		Example: "wise quote create --from GBP --amount 100 --to NZD",
-		Run: func(c *cobra.Command, args []string) {
-			o.Run(c, client)
-		},
-	}
-
-	c.Flags().StringVar(&o.fromCurrency, "from", "", "The source / origin currency for the quote")
-	c.Flags().StringVar(&o.toCurrency, "to", "", "The target / destination currency for the quote")
-	c.Flags().Float64Var(&o.sourceAmount, "amount", 0, "The amount of to / source currency to be sent")
-
-	return c
-}
-
-// CreateOptions ...
-type CreateOptions struct {
-	fromCurrency string
-	toCurrency   string
-	sourceAmount float64
-	profileID    int64 // if provided quote response will contain profile and quote id
-
-	client client.Client
-}
-
-// NewCreateOptions ...
-func NewCreateOptions() *CreateOptions {
-	return &CreateOptions{}
-}
-
-// Run ...
-func (o *CreateOptions) Run(cmd *cobra.Command, client *client.Client) error {
-	if o.fromCurrency == "" {
-		log.Fatal("source / from currency is needed to create a quote")
-	}
-
-	if o.toCurrency == "" {
-		log.Fatal("destination / to currency is needed to create a quote")
-	}
-
-	if o.sourceAmount <= 0 {
-		log.Fatal("amount greater than 0 is needed to create a quote")
-	}
-
-	o.profileID = client.ProfileID
-
-	quote := prepare(o.profileID, o.fromCurrency, o.toCurrency, o.sourceAmount)
-	err := quote.create(client)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return nil
-}
-
 // Prepare a quote to be sent to Wise
-func prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount float64) *Quote {
+func Prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount float64) *Quote {
 	return &Quote{
 		Profile:        profileID,
 		SourceCurrency: fromCurrency,
@@ -162,7 +82,7 @@ func prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount floa
 }
 
 // Create a new quote from Wise based on currency pair and amount provided
-func (q *Quote) create(client *client.Client) error {
+func (q *Quote) Create(client *client.Client) error {
 	query := url.Values{}
 	query.Add("source", fmt.Sprintf("%s", q.SourceCurrency))
 	query.Add("target", fmt.Sprintf("%s", q.TargetCurrency))
@@ -185,8 +105,6 @@ func (q *Quote) create(client *client.Client) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("test: %v %v %v", q.ID, q.CreatedByUserID, q.Profile)
 
 	// Print exchange rate ASCII plot from rate history for last 30 days
 	fmt.Print("\n")

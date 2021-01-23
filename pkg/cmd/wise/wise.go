@@ -48,7 +48,7 @@ func NewCommand(name string) *cobra.Command {
 	fmt.Println(Config.APIKey)
 	client := client.New(&Config)
 
-	fmt.Println(client.APIKey)
+	// fmt.Println(client.APIKey)
 
 	// Get and then set the user's profile (business or personal)
 	allProfiles, err := profiles.Get(client)
