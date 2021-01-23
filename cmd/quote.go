@@ -1,5 +1,4 @@
-The MIT License (MIT)
-
+/*
 Copyright © 2021 jtrotsky
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,3 +18,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+*/
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
+// quoteCmd represents the quote command
+var quoteCmd = &cobra.Command{
+	Use:   "quote",
+	Short: "Get a quote for sending an amount between currencies",
+	Long: `A quote provides a summary of the cost and exchange rate to send money. 
+Quotes can also hold a fixed exchange rate for a period of time (e.g. 24hrs).
+
+The quote reference should also be used as an input to create a transfer. For example:
+// create the quote
+./wise-cli quote create --amount 100 --from GBP --to NZD
+
+// use the quote to create a transfer 
+./wise-cli transfer create --quote 12345678`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("quote called")
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(quoteCmd)
+
+	balanceCmd.PersistentFlags().Int("amount", 0, "The amount to send or convert")
+	balanceCmd.PersistentFlags().String("from", "", "The currency to send from (e.g. GBP)")
+	balanceCmd.PersistentFlags().String("to", "", "The currency to send to (e.g. NZD)")
+}

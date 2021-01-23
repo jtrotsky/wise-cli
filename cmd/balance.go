@@ -1,5 +1,4 @@
-The MIT License (MIT)
-
+/*
 Copyright © 2021 jtrotsky
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,3 +18,31 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+*/
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
+// balanceCmd represents the balance command
+var balanceCmd = &cobra.Command{
+	Use:   "balance",
+	Short: "Manage multi-currency balances",
+	Long: `The balance command can be used to create and manage balances in multiple currencies.
+You may also convert money between balances. For example:
+./wise-cli balance convert --amount 100 --from GBP --to NZD`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("balance called")
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(balanceCmd)
+
+	balanceCmd.PersistentFlags().Int("amount", 0, "The amount to send or convert")
+	balanceCmd.PersistentFlags().String("from", "", "The currency to send from (e.g. GBP)")
+	balanceCmd.PersistentFlags().String("to", "", "The currency to send to (e.g. NZD)")
+}

@@ -1,5 +1,4 @@
-The MIT License (MIT)
-
+/*
 Copyright © 2021 jtrotsky
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,3 +18,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+*/
+package cmd
+
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
+// webhookCmd represents the webhook command
+var webhookCmd = &cobra.Command{
+	Use:   "webhook",
+	Short: "Create and listen to webhooks",
+	Long: `Use webhooks to listen for updates to the Wise account.
+	This command can also be useful to see examples of webhook payloads to help with development.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("webhook called")
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(webhookCmd)
+}
