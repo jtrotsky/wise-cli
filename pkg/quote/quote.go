@@ -14,10 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Quote is used to create a transfer https://api-docs.transferwise.com/#quotes-create
+// Quote creates a fixed record of a to and from currency and amount which can later be used to
+// create a transfer https://api-docs.transferwise.com/#quotes-create
 type Quote struct {
-	// ID                     string
-	// ProfileID              string
+	ID                     string     `json:"id,omitempty"`
 	SourceCurrency         string     `json:"source,omitempty"`
 	TargetCurrency         string     `json:"target,omitempty"`
 	SourceAmount           float64    `json:"sourceAmount,omitempty"`
@@ -26,6 +26,8 @@ type Quote struct {
 	Type                   string     `json:"type,omitempty"`
 	RateType               string     `json:"rateType,omitempty"`
 	CreatedTime            time.Time  `json:"createdTime,omitempty"`
+	CreatedByUserID        string     `json:"createdByUserId,omitempty"`
+	Profile                int64      `json:"profile,omitempty"`
 	DeliveryEstimate       time.Time  `json:"deliveryEstimate,omitempty"`
 	Fee                    float64    `json:"fee,omitempty"`
 	FeeDetails             FeeDetails `json:"feeDetails,omitempty"`
@@ -113,6 +115,7 @@ type CreateOptions struct {
 	fromCurrency string
 	toCurrency   string
 	sourceAmount float64
+	profileID    int64 // if provided quote response will contain profile and quote id
 
 	client client.Client
 }
@@ -136,7 +139,9 @@ func (o *CreateOptions) Run(cmd *cobra.Command, client *client.Client) error {
 		log.Fatal("amount greater than 0 is needed to create a quote")
 	}
 
-	quote := prepare(o.fromCurrency, o.toCurrency, o.sourceAmount)
+	o.profileID = client.ProfileID
+
+	quote := prepare(o.profileID, o.fromCurrency, o.toCurrency, o.sourceAmount)
 	err := quote.create(client)
 	if err != nil {
 		log.Fatal(err)
@@ -146,8 +151,9 @@ func (o *CreateOptions) Run(cmd *cobra.Command, client *client.Client) error {
 }
 
 // Prepare a quote to be sent to Wise
-func prepare(fromCurrency, toCurrency string, sourceAmount float64) *Quote {
+func prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount float64) *Quote {
 	return &Quote{
+		Profile:        profileID,
 		SourceCurrency: fromCurrency,
 		TargetCurrency: toCurrency,
 		SourceAmount:   sourceAmount,
@@ -179,8 +185,11 @@ func (q *Quote) create(client *client.Client) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Printf("test: %v %v %v", q.ID, q.CreatedByUserID, q.Profile)
+
+	// Print exchange rate ASCII plot from rate history for last 30 days
 	fmt.Print("\n")
-	// Print ASCII exchange rate plot
 	util.ExchangeRateGraph(client, q.SourceCurrency, q.TargetCurrency)
 
 	// calculate time until the delivery estimate

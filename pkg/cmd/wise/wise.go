@@ -1,10 +1,15 @@
 package wise
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/jtrotsky/wise-cli/pkg/client"
+	"github.com/jtrotsky/wise-cli/pkg/profiles"
 	"github.com/jtrotsky/wise-cli/pkg/quote"
 	"github.com/jtrotsky/wise-cli/pkg/transfer"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -14,11 +19,16 @@ const (
 	actionBalanceConvert = "balance.convert"
 )
 
-// Config is the cli configuration for the user
+// Config ...
 var Config client.Config
 
 // NewCommand reads a user input and creates a commend to be executed.
 func NewCommand(name string) *cobra.Command {
+	// config, err := client.LoadConfig()
+	// if err != nil {
+	// log.Fatal(err)
+	// }
+
 	c := &cobra.Command{
 		Use:   name,
 		Short: "A tool to play with Wise APIs",
@@ -33,8 +43,29 @@ func NewCommand(name string) *cobra.Command {
 		// },
 	}
 
-	c.PersistentFlags().StringVar(&Config.APIKey, "api-key", "", "Your secret API key ")
+	c.PersistentFlags().StringVar(&Config.APIKey, "api-key", "", "your secret API key")
+	viper.BindPFlag(Config.APIKey, c.PersistentFlags().Lookup(Config.APIKey))
+	fmt.Println(Config.APIKey)
 	client := client.New(&Config)
+
+	fmt.Println(client.APIKey)
+
+	// Get and then set the user's profile (business or personal)
+	allProfiles, err := profiles.Get(client)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// TODO: test
+	fmt.Println(allProfiles)
+
+	// TODO: user input to choose profile
+	personalProfile, err := profiles.GetProfileByType(allProfiles, profiles.EntityPersonal)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client.SetProfile(personalProfile.ID, profiles.EntityPersonal)
 
 	c.AddCommand(
 		quote.NewCommand(*client),
