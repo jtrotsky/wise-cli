@@ -9,6 +9,7 @@ import (
 // Config ...
 type Config struct {
 	APIKey      string
+	Debug       bool
 	PrivateKey  string
 	ProfileID   int64
 	ProfileType string
