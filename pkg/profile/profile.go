@@ -1,9 +1,8 @@
-package profiles
+package profile
 
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -20,13 +19,13 @@ const (
 
 // Profile is a personal and / or business entity associated with a Wise account.
 type Profile struct {
-	ID      int64          `json:"id"`
-	Type    string         `json:"type"`
-	Details ProfileDetails `json:"details"`
+	ID      int64   `json:"id"`
+	Type    string  `json:"type"`
+	Details Details `json:"details"`
 }
 
-// ProfileDetails contains the information about the profile entity.
-type ProfileDetails struct {
+// Details contains the information about the profile entity.
+type Details struct {
 	// Personal profile deatils
 	FirstName      string
 	LastName       string
@@ -96,9 +95,6 @@ func Get(client *client.Client) ([]Profile, error) {
 		log.Fatal(err)
 	}
 
-	// TODO: test
-	fmt.Printf("%s", body)
-
 	err = json.Unmarshal(body, &profiles)
 	if err != nil {
 		log.Fatal(err)
@@ -109,6 +105,7 @@ func Get(client *client.Client) ([]Profile, error) {
 
 // GetProfileByType returns the profile entity specified
 func GetProfileByType(profiles []Profile, profileType string) (Profile, error) {
+	// TODO: user input to choose profile instead of dump all
 	for _, profile := range profiles {
 		if strings.ToUpper(profile.Type) == EntityPersonal && strings.ToUpper(profileType) == EntityPersonal {
 			return profile, nil

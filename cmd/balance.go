@@ -1,29 +1,46 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
+	"github.com/jtrotsky/wise-cli/pkg/balance"
+	"github.com/jtrotsky/wise-cli/pkg/client"
 	"github.com/spf13/cobra"
 )
 
-// balanceCmd represents the balance command
-var balanceCmd = &cobra.Command{
-	Use:   "balance",
-	Short: "Manage multi-currency balances",
-	Long: `The balance command can be used to create and manage balances in multiple currencies.
+type balanceCmd struct {
+	cmd *cobra.Command
+
+	client    client.Client
+	profileID int64
+}
+
+func newBalanceCmd() *balanceCmd {
+	bc := &balanceCmd{}
+
+	bc.cmd = &cobra.Command{
+		Use:   "balance",
+		Short: "Manage multi-currency balances",
+		Long: `The balance command can be used to create and manage balances in multiple currencies.
 
 You may also convert money between balances. For example:
 
 $ wise balance convert --amount 100 --from GBP --to NZD`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("balance called")
-	},
+		RunE: bc.runBalanceCmd,
+	}
+
+	bc.cmd.PersistentFlags().StringVar(&bc.client.APIKey, "token", "", "API token")
+
+	return bc
 }
 
-func init() {
-	rootCmd.AddCommand(balanceCmd)
+func (bc *balanceCmd) runBalanceCmd(cmd *cobra.Command, args []string) error {
+	_, err := balance.Get(&bc.client)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	balanceCmd.Flags().Int32("amount", 0, "The amount to send or convert")
-	balanceCmd.Flags().String("from", "", "The currency to send from (e.g. GBP)")
-	balanceCmd.Flags().String("to", "", "The currency to send to (e.g. NZD)")
+	// fmt.Println("%s", accounts)
+
+	return nil
 }
