@@ -44,6 +44,9 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 
 	url.RawQuery = params
 
+	// TODO: testing
+	// fmt.Printf("\n%s\n", url.String())
+
 	request, err := http.NewRequest(method, url.String(), nil)
 	if err != nil {
 		return nil, err
