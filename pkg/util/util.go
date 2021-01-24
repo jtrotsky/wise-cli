@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,17 +14,14 @@ import (
 	"github.com/jtrotsky/wise-cli/pkg/client"
 )
 
-// CalculateDeliveryTime returns the time until an estimated future date
-func CalculateDeliveryTime(deliveryEstimate time.Time) time.Duration {
-	// t, err := time.Parse(time.RFC3339, deliveryEstimate)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// duration is the time from now until the estimated delivery time in nanoseconds
-	duration := time.Until(deliveryEstimate)
-
-	return duration
+// TimeUntil returns the time duration until an estimated future date in nanoseconds.
+func TimeUntil(futureTime time.Time) (time.Duration, error) {
+	duration := time.Until(futureTime)
+	// if the date is in the past then error
+	if duration < 0 {
+		return duration, errors.New("could not calculate duration becuase time provided was in the past")
+	}
+	return duration, nil
 }
 
 // RateHistory is a collection of rate records for a currency pair
@@ -64,7 +62,7 @@ func ExchangeRateGraph(client *client.Client, sourceCurrency, targetCurrency str
 	query.Add("to", fmt.Sprintf("%s", time.Now().UTC().Format(time.RFC3339)))                      // until now
 	query.Add("group", "day")                                                                      // group data by day
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/rates/", query.Encode())
+	response, err := client.DoRequest(http.MethodGet, "/v1/rates/", query)
 	if err != nil {
 		log.Fatal(err)
 	}

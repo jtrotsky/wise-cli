@@ -83,7 +83,7 @@ type Details struct {
 func Get(client *client.Client) ([]Profile, error) {
 	profiles := []Profile{}
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/profiles", "")
+	response, err := client.DoRequest(http.MethodGet, "/v1/profiles", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

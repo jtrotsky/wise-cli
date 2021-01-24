@@ -128,7 +128,7 @@ func Get(client *client.Client) ([]Accounts, error) {
 	query := url.Values{}
 	query.Add("profileId", fmt.Sprintf("%d", client.ProfileID))
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/borderless-accounts/", query.Encode())
+	response, err := client.DoRequest(http.MethodGet, "/v1/borderless-accounts/", query)
 	if err != nil {
 		return accounts, err
 	}
