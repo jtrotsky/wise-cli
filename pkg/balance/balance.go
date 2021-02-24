@@ -154,7 +154,7 @@ func Get(client *client.Client) ([]Accounts, error) {
 func (accounts Accounts) printBalance(currency string) {
 	for _, balance := range accounts.Balances {
 		if balance.Amount.Currency == "GBP" {
-			fmt.Printf("You have %.2f %s in your account", balance.Amount.Value, balance.Amount.Currency)
+			fmt.Printf("You have £%.2f %s in your Wise account", balance.Amount.Value, balance.Amount.Currency)
 		}
 	}
 }

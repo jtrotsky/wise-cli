@@ -13,14 +13,14 @@ const DefaultAPIBaseURL = "https://api.transferwise.com"
 
 // Client contains the authorisation and config for the Wise account
 type Client struct {
-	APIKey     string
+	APIToken   string
 	ProfileID  int64
 	httpClient *http.Client
 }
 
 // New creates a new instance of Client and loads config
 func New(config *Config) *Client {
-	return &Client{config.APIKey, 0, newHTTPClient()}
+	return &Client{config.APIToken, 0, newHTTPClient()}
 }
 
 // SetProfile accepts a profile ID and type to set as a global configuration.
@@ -53,10 +53,10 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 	}
 
 	request.Header.Set("User-Agent", "wise-cli")
-	if client.APIKey == "" {
-		return nil, errors.New("no api key set")
+	if client.APIToken == "" {
+		return nil, errors.New("no api token set")
 	}
-	request.Header.Set("Authorization", "Bearer "+client.APIKey)
+	request.Header.Set("Authorization", "Bearer "+client.APIToken)
 
 	if client.httpClient == nil {
 		client.httpClient = newHTTPClient()
