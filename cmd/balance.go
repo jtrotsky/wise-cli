@@ -13,6 +13,7 @@ type balanceCmd struct {
 
 	client    client.Client
 	profileID int64
+	currency  string
 }
 
 func newBalanceCmd() *balanceCmd {
@@ -29,7 +30,8 @@ $ wise balance convert --amount 100 --from GBP --to NZD`,
 		RunE: bc.runBalanceCmd,
 	}
 
-	bc.cmd.PersistentFlags().StringVar(&bc.client.APIKey, "token", "", "API token")
+	bc.cmd.PersistentFlags().StringVar(&bc.client.APIToken, "token", "", "API token")
+	bc.cmd.Flags().StringVar(&bc.currency, "currency", "GBP", "The account currency (e.g. GBP)")
 
 	return bc
 }
