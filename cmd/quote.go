@@ -38,7 +38,7 @@ func newQuoteCmd() *quoteCmd {
 		RunE: qc.runQuoteCmd,
 	}
 
-	qc.cmd.PersistentFlags().StringVar(&qc.client.APIKey, "token", "", "API token")
+	qc.cmd.PersistentFlags().StringVar(&qc.client.APIToken, "token", "", "API token")
 
 	qc.cmd.Flags().Float64Var(&qc.amount, "amount", 0, "The amount to send or convert")
 	qc.cmd.Flags().StringVar(&qc.fromCurrency, "from", "", "The currency to send from (e.g. GBP)")
