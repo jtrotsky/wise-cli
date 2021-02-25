@@ -3,12 +3,13 @@ package quote
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jtrotsky/wise-cli/pkg/util"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/jtrotsky/wise-cli/pkg/util"
 
 	"github.com/jtrotsky/wise-cli/pkg/client"
 )
@@ -115,7 +116,7 @@ func (q *Quote) Create(client *client.Client) error {
 
 	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
 		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
-	fmt.Printf("\n -> %.2f %s will arrive in %.0fh\n",
+	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n",
 		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours())
 
 	return nil
