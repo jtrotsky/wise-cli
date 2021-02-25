@@ -37,12 +37,10 @@ $ wise balance convert --amount 100 --from GBP --to NZD`,
 }
 
 func (bc *balanceCmd) runBalanceCmd(cmd *cobra.Command, args []string) error {
-	_, err := balance.Get(&bc.client)
+	_, err := balance.Get(&bc.client, bc.currency)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// fmt.Println("%s", accounts)
 
 	return nil
 }

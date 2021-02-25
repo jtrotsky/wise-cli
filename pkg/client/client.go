@@ -45,7 +45,7 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 	url.RawQuery = params
 
 	// TODO: testing
-	// fmt.Printf("\n%s\n", url.String())
+	fmt.Printf("\n%s\n", url.String())
 
 	request, err := http.NewRequest(method, url.String(), nil)
 	if err != nil {
@@ -68,6 +68,15 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 	response, err := client.httpClient.Do(request)
 	if err != nil {
 		return nil, err
+	}
+
+	switch response.StatusCode {
+	case 400:
+		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
+	case 401:
+		return nil, fmt.Errorf("HTTP: %d , unauthorised check token is valid", response.StatusCode)
+	case 500:
+		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
 	}
 
 	// TODO: checkErrors
