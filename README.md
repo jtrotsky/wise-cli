@@ -12,7 +12,7 @@ Help you integrate the Wise API into your application.
 play with the Wise API
 
 Usage:
- wise quote create --to NZD --from GBP --amount 100 --api-key <YOUR-API-SECRET-KEY-HERE> 
+ wise quote create --to NZD --from GBP --amount 100 --api-token <YOUR-API-TOKEN-HERE> 
 
  1.91 ┤╭╮   ╭╮╭─╮      ╭╮         ╭─╮
  1.90 ┼╯╰╮╭─╯╰╯ ╰─╮ ╭──╯│     ╭─╮╭╯ ╰

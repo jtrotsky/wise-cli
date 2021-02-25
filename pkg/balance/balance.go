@@ -106,7 +106,7 @@ type BankAddress struct {
 // ]
 
 // Get all accounts for a given profile
-func Get(client *client.Client) ([]Accounts, error) {
+func Get(client *client.Client, currency string) ([]Accounts, error) {
 	accounts := []Accounts{}
 
 	// Get and then set the user's profile (business or personal)
@@ -146,15 +146,15 @@ func Get(client *client.Client) ([]Accounts, error) {
 	}
 
 	// TODO: [0] is messy
-	accounts[0].printBalance("GBP")
+	accounts[0].printBalance(currency)
 
 	return accounts, nil
 }
 
 func (accounts Accounts) printBalance(currency string) {
 	for _, balance := range accounts.Balances {
-		if balance.Amount.Currency == "GBP" {
-			fmt.Printf("You have %.2f %s in your account", balance.Amount.Value, balance.Amount.Currency)
+		if balance.Amount.Currency == currency {
+			fmt.Printf("You have £%.2f %s in your Wise account", balance.Amount.Value, balance.Amount.Currency)
 		}
 	}
 }
