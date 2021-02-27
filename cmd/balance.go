@@ -31,7 +31,7 @@ $ wise balance convert --amount 100 --from GBP --to NZD`,
 	}
 
 	bc.cmd.PersistentFlags().StringVar(&bc.client.APIToken, "token", "", "API token")
-	bc.cmd.Flags().StringVar(&bc.currency, "currency", "GBP", "The account currency (e.g. GBP)")
+	bc.cmd.Flags().StringVar(&bc.currency, "currency", "", "The account currency (e.g. GBP)")
 
 	return bc
 }

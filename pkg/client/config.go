@@ -2,11 +2,10 @@ package client
 
 import (
 	"flag"
-	// "fmt"
 	"log"
 )
 
-// Config ...
+// Config contains all the details needed to make API calls for a Wise account.
 type Config struct {
 	APIToken    string
 	PrivateKey  string
@@ -18,12 +17,12 @@ type Config struct {
 func LoadConfig() (*Config, error) {
 	config := Config{}
 
-	flag.StringVar(&config.APIToken, "api-token", "", "your secret api token")
-	// flag.StringVar(&config.PrivateKey, "private-key", "", "path to your private signing key file")
+	flag.StringVar(&config.APIToken, "token", "", "your secret api token")
+	flag.StringVar(&config.PrivateKey, "key", "", "path to your private signing key file")
 	flag.Parse()
 
 	if config.APIToken == "" {
-		log.Fatal("please specify a secret api token with flag: --api-token")
+		log.Fatal("please specify a secret api token with flag: --token")
 	}
 
 	return &config, nil
