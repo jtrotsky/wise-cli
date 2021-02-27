@@ -62,9 +62,6 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 		client.httpClient = newHTTPClient()
 	}
 
-	// DEBUG: remove
-	// fmt.Printf("%s %s\n", method, url.String())
-
 	response, err := client.httpClient.Do(request)
 	if err != nil {
 		return nil, err
