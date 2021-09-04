@@ -1,15 +1,18 @@
 package client
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
 )
 
 // DefaultAPIBaseURL is the default base URL for API requests
-const DefaultAPIBaseURL = "https://api.transferwise.com"
+const DefaultAPIBaseURL = "https://api.wise.com"
 
 // Client contains the authorisation and config for the Wise account
 type Client struct {
@@ -27,31 +30,44 @@ func New(config *Config) *Client {
 func (client *Client) SetProfile(profileID int64, profileType string) error {
 	if profileID != 0 {
 		client.ProfileID = profileID
-		// client.Config.ProfileType = profileType
 		return nil
 	}
 	return errors.New("missing profile ID or type")
 }
 
 // DoRequest performs the HTTP request
-func (client *Client) DoRequest(method, path, params string) (*http.Response, error) {
-	// TODO: cleanup
+func (client *Client) DoRequest(method, path string, params url.Values) (*http.Response, error) {
 	urlJoined := fmt.Sprintf("%s%s", DefaultAPIBaseURL, path)
 	url, err := url.Parse(urlJoined)
 	if err != nil {
 		return nil, err
 	}
 
-	url.RawQuery = params
+	var body io.Reader
 
-	// TODO: testing
-	//fmt.Printf("\n%s\n", url.String())
+	if method == http.MethodGet {
+		url.RawQuery = params.Encode()
+	} else {
+		queryData := map[string]string{}
+		for k, v := range params {
+			queryData[k] = v[0]
+		}
+		postBody, err := json.Marshal(queryData)
+		if err != nil {
+			return nil, err
+		}
 
-	request, err := http.NewRequest(method, url.String(), nil)
+		body = bytes.NewBuffer(postBody)
+	}
+
+	request, err := http.NewRequest(method, url.String(), body)
 	if err != nil {
 		return nil, err
 	}
 
+	if method == http.MethodPost {
+		request.Header.Add("Content-Type", "application/json")
+	}
 	request.Header.Set("User-Agent", "wise-cli")
 	if client.APIToken == "" {
 		return nil, errors.New("no api token set")
@@ -62,7 +78,6 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 		client.httpClient = newHTTPClient()
 	}
 
-	// DEBUG: remove
 	// fmt.Printf("%s %s\n", method, url.String())
 
 	response, err := client.httpClient.Do(request)

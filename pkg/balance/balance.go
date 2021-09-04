@@ -128,7 +128,7 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 	query := url.Values{}
 	query.Add("profileId", fmt.Sprintf("%d", client.ProfileID))
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/borderless-accounts/", query.Encode())
+	response, err := client.DoRequest(http.MethodGet, "/v1/borderless-accounts/", query)
 	if err != nil {
 		return accounts, err
 	}
@@ -154,7 +154,7 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 func (accounts Accounts) printBalance(currency string) {
 	for _, balance := range accounts.Balances {
 		if balance.Amount.Currency == currency {
-			fmt.Printf("You have £%.2f %s in your Wise account", balance.Amount.Value, balance.Amount.Currency)
+			fmt.Printf("\nYou have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
 		}
 	}
 }

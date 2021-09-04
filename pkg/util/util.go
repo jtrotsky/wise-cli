@@ -64,7 +64,7 @@ func ExchangeRateGraph(client *client.Client, sourceCurrency, targetCurrency str
 	query.Add("to", time.Now().UTC().Format(time.RFC3339))                      // until now
 	query.Add("group", "day")                                                   // group data by day
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/rates/", query.Encode())
+	response, err := client.DoRequest(http.MethodGet, "/v1/rates/", query)
 	if err != nil {
 		log.Fatal(err)
 	}

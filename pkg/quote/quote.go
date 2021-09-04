@@ -9,31 +9,43 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/jtrotsky/wise-cli/pkg/util"
-
 	"github.com/jtrotsky/wise-cli/pkg/client"
+	"github.com/jtrotsky/wise-cli/pkg/util"
+)
+
+const (
+	PaymentMethodBankTransfer = "BANK_TRANSFER"
+	RateTypeFixed             = "FIXED"
 )
 
 // Quote creates a fixed record of a to and from currency and amount which can later be used to
 // create a transfer https://api-docs.transferwise.com/#quotes-create
 type Quote struct {
-	ID                     string     `json:"id,omitempty"`
-	SourceCurrency         string     `json:"source,omitempty"`
-	TargetCurrency         string     `json:"target,omitempty"`
-	SourceAmount           float64    `json:"sourceAmount,omitempty"`
-	TargetAmount           float64    `json:"targetAmount,omitempty"`
-	Rate                   float64    `json:"rate,omitempty"`
-	Type                   string     `json:"type,omitempty"`
-	RateType               string     `json:"rateType,omitempty"`
-	CreatedTime            time.Time  `json:"createdTime,omitempty"`
-	CreatedByUserID        string     `json:"createdByUserId,omitempty"`
-	Profile                int64      `json:"profile,omitempty"`
-	DeliveryEstimate       time.Time  `json:"deliveryEstimate,omitempty"`
-	Fee                    float64    `json:"fee,omitempty"`
-	FeeDetails             FeeDetails `json:"feeDetails,omitempty"`
-	AllowedProfileTypes    []string   `json:"allowedProfileTypes,omitempty"`
-	GuaranteedTargetAmount bool       `json:"GuaranteedTargetAmount,omitempty"`
-	OfSourceAmount         bool       `json:"OfSourceAmount,omitempty"`
+	ID                     string           `json:"id,omitempty"`
+	SourceCurrency         string           `json:"sourceCurrency,omitempty"`
+	TargetCurrency         string           `json:"targetCurrency,omitempty"`
+	SourceAmount           float64          `json:"sourceAmount,omitempty"`
+	Rate                   float64          `json:"rate,omitempty"`
+	RateType               string           `json:"rateType,omitempty"`
+	CreatedTime            time.Time        `json:"createdTime,omitempty"`
+	Profile                int64            `json:"profile,omitempty"`
+	RateExpirationTime     time.Time        `json:"rateExpirationTime,omitempty"`
+	GuaranteedTargetAmount bool             `json:"GuaranteedTargetAmount,omitempty"`
+	PaymentOptions         []PaymentOptions `json:"paymentOptions,omitempty"`
+}
+
+// PaymentOptions contains the fees and delivery times for the various ways a user can fund
+// the transfer.
+type PaymentOptions struct {
+	EstimatedDelivery          time.Time  `json:"estimatedDelivery,omitempty"`
+	FormattedEstimatedDelivery string     `json:"formattedEstimatedDelivery,omitempty"`
+	Fee                        FeeDetails `json:"fee,omitempty"`
+	SourceAmount               float64    `json:"sourceAmount,omitempty"`
+	TargetAmount               float64    `json:"targetAmount,omitempty"`
+	SourceCurrency             string     `json:"sourceCurrency,omitempty"`
+	TargetCurrency             string     `json:"targetCurrency,omitempty"`
+	PayIn                      string     `json:"payIn,omitempty"`
+	PayOut                     string     `json:"payOut,omitempty"`
 }
 
 // FeeDetails contains the breakdown of fee components
@@ -78,24 +90,26 @@ func Prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount floa
 		SourceCurrency: fromCurrency,
 		TargetCurrency: toCurrency,
 		SourceAmount:   sourceAmount,
-		RateType:       "FIXED", // TODO
+		RateType:       RateTypeFixed, // FX rate is preserved for a period of time e.g. 24hrs
 	}
 }
 
 // Create a new quote from Wise based on currency pair and amount provided
 func (q *Quote) Create(client *client.Client) error {
 	query := url.Values{}
-	query.Add("source", q.SourceCurrency)
-	query.Add("target", q.TargetCurrency)
+	query.Add("profile", fmt.Sprintf("%d", q.Profile))
+	query.Add("sourceCurrency", q.SourceCurrency)
+	query.Add("targetCurrency", q.TargetCurrency)
 	query.Add("sourceAmount", fmt.Sprintf("%f", q.SourceAmount))
+	query.Add("preferredPayIn", PaymentMethodBankTransfer)
 	query.Add("rateType", q.RateType)
 
-	response, err := client.DoRequest(http.MethodGet, "/v1/quotes/", query.Encode())
+	response, err := client.DoRequest(http.MethodPost, "/v2/quotes", query)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Make sure response body is closed at end.
+	// Make sure response body is closed at end
 	defer response.Body.Close()
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -112,12 +126,12 @@ func (q *Quote) Create(client *client.Client) error {
 	util.ExchangeRateGraph(client, q.SourceCurrency, q.TargetCurrency)
 
 	// calculate time until the delivery estimate
-	deliveryTime := util.CalculateDeliveryTime(q.DeliveryEstimate)
+	deliveryTime := util.CalculateDeliveryTime(q.PaymentOptions[0].EstimatedDelivery)
 
 	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
 		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
-	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n",
-		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours())
+	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n\n",
+		q.PaymentOptions[0].TargetAmount, q.TargetCurrency, deliveryTime.Hours())
 
 	return nil
 }
