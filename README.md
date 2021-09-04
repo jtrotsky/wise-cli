@@ -22,6 +22,6 @@ Usage:
  1.86 ┤                     ╰╯
                    30 days
 
- 100 GBP to NZD at 1=1.899290
+ Quote for 100 GBP to NZD at 1=1.899290
   -> 188.26 NZD will arrive in 57h
 ```

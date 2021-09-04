@@ -85,10 +85,10 @@ func Prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount floa
 // Create a new quote from Wise based on currency pair and amount provided
 func (q *Quote) Create(client *client.Client) error {
 	query := url.Values{}
-	query.Add("source", fmt.Sprintf("%s", q.SourceCurrency))
-	query.Add("target", fmt.Sprintf("%s", q.TargetCurrency))
+	query.Add("source", q.SourceCurrency)
+	query.Add("target", q.TargetCurrency)
 	query.Add("sourceAmount", fmt.Sprintf("%f", q.SourceAmount))
-	query.Add("rateType", fmt.Sprintf("%s", q.RateType))
+	query.Add("rateType", q.RateType)
 
 	response, err := client.DoRequest(http.MethodGet, "/v1/quotes/", query.Encode())
 	if err != nil {
@@ -114,7 +114,7 @@ func (q *Quote) Create(client *client.Client) error {
 	// calculate time until the delivery estimate
 	deliveryTime := util.CalculateDeliveryTime(q.DeliveryEstimate)
 
-	fmt.Printf("\n%.0f %s to %s at 1=%f",
+	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
 		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
 	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n",
 		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours())

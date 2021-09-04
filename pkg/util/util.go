@@ -58,11 +58,11 @@ type ExchangeRateRecord struct {
 // ExchangeRateGraph prints an ASCII plot for the last 30 days of rates for a currency pair
 func ExchangeRateGraph(client *client.Client, sourceCurrency, targetCurrency string) {
 	query := url.Values{}
-	query.Add("source", fmt.Sprintf("%s", sourceCurrency))
-	query.Add("target", fmt.Sprintf("%s", targetCurrency))
-	query.Add("from", fmt.Sprintf("%s", time.Now().UTC().AddDate(0, 0, -30).Format(time.RFC3339))) // 30 days ago
-	query.Add("to", fmt.Sprintf("%s", time.Now().UTC().Format(time.RFC3339)))                      // until now
-	query.Add("group", "day")                                                                      // group data by day
+	query.Add("source", sourceCurrency)
+	query.Add("target", targetCurrency)
+	query.Add("from", time.Now().UTC().AddDate(0, 0, -30).Format(time.RFC3339)) // 30 days ago
+	query.Add("to", time.Now().UTC().Format(time.RFC3339))                      // until now
+	query.Add("group", "day")                                                   // group data by day
 
 	response, err := client.DoRequest(http.MethodGet, "/v1/rates/", query.Encode())
 	if err != nil {
