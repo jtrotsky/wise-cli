@@ -2,7 +2,6 @@ package client
 
 import (
 	"flag"
-	// "fmt"
 	"log"
 )
 

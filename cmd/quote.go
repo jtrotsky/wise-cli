@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/jtrotsky/wise-cli/pkg/client"
+	"github.com/jtrotsky/wise-cli/pkg/profile"
 	"github.com/jtrotsky/wise-cli/pkg/quote"
 	"github.com/spf13/cobra"
 )
@@ -11,12 +12,12 @@ import (
 type quoteCmd struct {
 	cmd *cobra.Command
 
-	amount       float64
-	apiToken     string
+	amount float64
+	//apiToken     string
 	client       client.Client
 	fromCurrency string
-	profileID    int64
-	toCurrency   string
+	//profileID    int64
+	toCurrency string
 }
 
 func newQuoteCmd() *quoteCmd {
@@ -60,10 +61,19 @@ func (qc *quoteCmd) runQuoteCmd(cmd *cobra.Command, args []string) error {
 		log.Fatal("amount greater than 0 is needed to create a quote")
 	}
 
-	qc.profileID = qc.client.ProfileID
+	profiles, err := profile.Get(&qc.client)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	quote := quote.Prepare(qc.profileID, qc.fromCurrency, qc.toCurrency, qc.amount)
-	err := quote.Create(&qc.client)
+	personalProfile, err := profile.GetProfileByType(profiles, profile.EntityPersonal)
+	if err != nil {
+		log.Fatal(err)
+	}
+	qc.client.SetProfile(personalProfile.ID, profile.EntityPersonal)
+
+	quote := quote.Prepare(qc.client.ProfileID, qc.fromCurrency, qc.toCurrency, qc.amount)
+	err = quote.Create(&qc.client)
 	if err != nil {
 		log.Fatal(err)
 	}
