@@ -12,7 +12,7 @@ Help you integrate the Wise API into your application.
 play with the Wise API
 
 Usage:
- wise quote create --to NZD --from GBP --amount 100 --api-token <YOUR-API-TOKEN-HERE> 
+ wise-cli quote create --to NZD --from GBP --amount 100 --token <YOUR-API-TOKEN-HERE> 
 
  1.91 ┤╭╮   ╭╮╭─╮      ╭╮         ╭─╮
  1.90 ┼╯╰╮╭─╯╰╯ ╰─╮ ╭──╯│     ╭─╮╭╯ ╰
@@ -22,6 +22,6 @@ Usage:
  1.86 ┤                     ╰╯
                    30 days
 
- Quote for 100 GBP to NZD at 1=1.899290
+ 100 GBP to NZD at 1=1.899290
   -> 188.26 NZD will arrive in 57h
 ```

@@ -114,7 +114,7 @@ func (q *Quote) Create(client *client.Client) error {
 	// calculate time until the delivery estimate
 	deliveryTime := util.CalculateDeliveryTime(q.DeliveryEstimate)
 
-	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
+	fmt.Printf("\n%.0f %s to %s at 1=%f",
 		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
 	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n",
 		q.TargetAmount, q.TargetCurrency, deliveryTime.Hours())
