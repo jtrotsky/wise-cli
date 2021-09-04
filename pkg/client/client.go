@@ -86,9 +86,7 @@ func (client *Client) DoRequest(method, path, params string) (*http.Response, er
 }
 
 func newHTTPClient() *http.Client {
-	var httpTransport *http.Transport
-
-	httpTransport = &http.Transport{
+	httpTransport := &http.Transport{
 		ResponseHeaderTimeout: 30 * time.Second,
 		ExpectContinueTimeout: 10 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,

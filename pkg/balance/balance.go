@@ -30,11 +30,11 @@ type Accounts struct {
 
 // Balance has information about a specific account for a currency.
 type Balance struct {
-	Active         bool        `json:"active,omiitempty"`
-	Amount         Amount      `json:"amount,omiitempty"`
+	Active         bool        `json:"active,omitempty"`
+	Amount         Amount      `json:"amount,omitempty"`
 	BankDetails    BankDetails `json:"bankDetails,omitempty"`
-	Currency       string      `json:"currency,omiitempty"`
-	Eligible       bool        `json:"eligible,omiitempty"`
+	Currency       string      `json:"currency,omitempty"`
+	Eligible       bool        `json:"eligible,omitempty"`
 	Type           string      `json:"balanceType,omitempty"`
 	ReservedAmount Amount      `json:"reservedAmount,omitempty"`
 }
