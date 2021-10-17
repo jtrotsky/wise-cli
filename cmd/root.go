@@ -23,10 +23,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -39,15 +38,14 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "wise-cli",
 	Short: "Wise-cli let's you play with the Wise API",
-	Long: `Wise-cli acts as an open source reference app for how to interact with Wise APIs.
-It should also be a convenient way to play with exchange rates and your own Wise account
-from the command line.
+	Long: `Wise-cli is an unofficial open source reference app for how to interact
+with Wise APIs using Go. It should also be a convenient way to play with your
+own Wise account from the command line.
 
-Lastly developers that are integrating to the Wise Platform may be able to use wise-cli to
-help them learn Wise APIs faster.`,
+Issues are welcome but please temper your expectations – this is a side project.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -85,7 +83,7 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Find home directory.
-		home, err := homedir.Dir()
+		home, err := os.UserHomeDir()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
