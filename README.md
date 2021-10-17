@@ -1,11 +1,12 @@
 ## wise-cli
 
 ### why
-Help you integrate the Wise API into your application.
-- get and display quotes 
-- view / transfer between balances 
-- add / update / delete recipients 
-- test webhooks from the cli
+Play with your Wise account from the command line and see an example of using 
+Wise APIs with Go.
+- see the rates and arrival time to send money anywhere 
+- view and transfer funds between balances 
+- add / update / delete recipients (TODO)
+- test webhooks from the cli (TODO)
 
 ### usage
 ```
