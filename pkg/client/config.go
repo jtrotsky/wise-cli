@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-// Config ...
+// Config contains account and authentication details.
 type Config struct {
 	APIToken    string
 	PrivateKey  string
@@ -22,7 +22,7 @@ func LoadConfig() (*Config, error) {
 	flag.Parse()
 
 	if config.APIToken == "" {
-		log.Fatal("please specify a secret api token with flag: --api-token")
+		log.Fatal("please specify a secret api token with flag: --token")
 	}
 
 	return &config, nil

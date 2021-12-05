@@ -32,10 +32,10 @@ func newQuoteCmd() *quoteCmd {
 	The quote reference should also be used as an input to create a transfer. For example:
 	
 	// create the quote
-	$ wise quote create --amount 100 --from GBP --to NZD
+	$ wise quote --amount 100 --from GBP --to NZD --token <TOKEN>
 	
 	// use the quote to create a transfer 
-	$ wise transfer create --quote 12345678`,
+	$ wise transfer --quote 12345678`,
 		RunE: qc.runQuoteCmd,
 	}
 
