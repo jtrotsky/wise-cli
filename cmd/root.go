@@ -74,6 +74,7 @@ func init() {
 
 	rootCmd.AddCommand(newBalanceCmd().cmd)
 	rootCmd.AddCommand(newQuoteCmd().cmd)
+	rootCmd.AddCommand(newRecipientCmd().cmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
