@@ -1,7 +1,7 @@
 ## wise-cli
 
 ### why
-Play with your Wise account from the command line and see an example of using 
+Use your Wise account from the command line and see an example of using 
 Wise APIs with Go.
 - see the rates and arrival time to send money anywhere 
 - view and transfer funds between balances 
