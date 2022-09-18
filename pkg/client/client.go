@@ -57,7 +57,9 @@ func (client *Client) DoRequest(method, path string, params url.Values) (*http.R
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("%s", postBody)
+
+		// DEBUG
+		// fmt.Printf("%s", postBody)
 
 		body = bytes.NewBuffer(postBody)
 	}
@@ -80,7 +82,8 @@ func (client *Client) DoRequest(method, path string, params url.Values) (*http.R
 		client.httpClient = newHTTPClient()
 	}
 
-	fmt.Printf("%s %s\n", method, url.String())
+	// DEBUG
+	//fmt.Printf("%s %s\n", method, url.String())
 
 	response, err := client.httpClient.Do(request)
 	if err != nil {
@@ -92,6 +95,8 @@ func (client *Client) DoRequest(method, path string, params url.Values) (*http.R
 		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
 	case 401:
 		return nil, fmt.Errorf("HTTP: %d , unauthorised check token is valid", response.StatusCode)
+	case 403:
+		return nil, fmt.Errorf("HTTP: %d , forbidden check token permissions", response.StatusCode)
 	case 500:
 		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
 	}
