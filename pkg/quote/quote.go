@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/jtrotsky/wise-cli/pkg/client"
@@ -98,8 +99,8 @@ func Prepare(profileID int64, fromCurrency, toCurrency string, sourceAmount floa
 func (q *Quote) Create(client *client.Client) error {
 	query := url.Values{}
 	query.Add("profile", fmt.Sprintf("%d", q.Profile))
-	query.Add("sourceCurrency", q.SourceCurrency)
-	query.Add("targetCurrency", q.TargetCurrency)
+	query.Add("sourceCurrency", strings.ToUpper(q.SourceCurrency))
+	query.Add("targetCurrency", strings.ToUpper(q.TargetCurrency))
 	query.Add("sourceAmount", fmt.Sprintf("%f", q.SourceAmount))
 	query.Add("preferredPayIn", PaymentMethodBankTransfer)
 	query.Add("rateType", q.RateType)
