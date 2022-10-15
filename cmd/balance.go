@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"errors"
 	"log"
+	"strings"
 
 	"github.com/jtrotsky/wise-cli/pkg/balance"
 	"github.com/jtrotsky/wise-cli/pkg/client"
+	"github.com/jtrotsky/wise-cli/pkg/util"
 	"github.com/spf13/cobra"
 )
 
@@ -36,12 +39,16 @@ $ wise-cli balance --currency GBP`,
 }
 
 func (bc *balanceCmd) runBalanceCmd(cmd *cobra.Command, args []string) error {
-	_, err := balance.Get(&bc.client, bc.currency)
+	if !util.ValidCurrencyCode(bc.currency) {
+		return errors.New("invalid currency code, format like: GBP")
+	}
+
+	_, err := balance.Get(&bc.client, strings.ToUpper(bc.currency))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return nil
+	return err
 }
 
 // Long: `The balance command can be used to create and manage balances in multiple currencies.
