@@ -3,7 +3,7 @@ package quote
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -112,7 +112,7 @@ func (q *Quote) Create(client *client.Client) error {
 
 	// Make sure response body is closed at end
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
