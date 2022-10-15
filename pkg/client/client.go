@@ -97,11 +97,13 @@ func (client *Client) DoRequest(method, path string, params url.Values) (*http.R
 		return nil, fmt.Errorf("HTTP: %d , unauthorised check token is valid", response.StatusCode)
 	case 403:
 		return nil, fmt.Errorf("HTTP: %d , forbidden check token permissions", response.StatusCode)
+	case 404:
+		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
 	case 500:
 		return nil, fmt.Errorf("HTTP: %d , something failed", response.StatusCode)
 	}
 
-	// TODO: checkErrors
+	// TODO: checkErrors better
 	// {"timestamp":"2021-01-02T12:57:07.659+0000","status":400,"error":"Bad Request","message":"Bad Request","path":"/v1/rates/"}
 
 	return response, nil

@@ -3,11 +3,13 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"time"
+
+	"golang.org/x/text/currency"
 
 	"github.com/guptarohit/asciigraph"
 	"github.com/jtrotsky/wise-cli/pkg/client"
@@ -15,11 +17,6 @@ import (
 
 // CalculateDeliveryTime returns the time until an estimated future date
 func CalculateDeliveryTime(deliveryEstimate time.Time) time.Duration {
-	// t, err := time.Parse(time.RFC3339, deliveryEstimate)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	// duration is the time from now until the estimated delivery time in nanoseconds
 	duration := time.Until(deliveryEstimate)
 
@@ -70,7 +67,7 @@ func ExchangeRateGraph(client *client.Client, sourceCurrency, targetCurrency str
 	}
 
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -104,4 +101,13 @@ func ParseTime(timeStr string) time.Time {
 		log.Fatal(err)
 	}
 	return time
+}
+
+// Check that a currency code is a recognised ISO 4217 value and well formatted
+func ValidCurrencyCode(code string) bool {
+	_, err := currency.ParseISO(code)
+	if err != nil {
+		return false
+	}
+	return true
 }
