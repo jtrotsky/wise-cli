@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -135,7 +135,7 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 
 	// Make sure response body is closed at end.
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return accounts, err
 	}
@@ -145,7 +145,10 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 		return accounts, err
 	}
 
-	// TODO: [0] is messy
+	// DEBUG
+	// log.Println(accounts)
+
+	// TODO: [0] is filthy
 	accounts[0].printBalance(currency)
 
 	return accounts, nil
@@ -153,8 +156,16 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 
 func (accounts Accounts) printBalance(currency string) {
 	for _, balance := range accounts.Balances {
-		if balance.Amount.Currency == currency {
-			fmt.Printf("\nYou have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
+		if balance.Currency == currency {
+			if balance.Type == AvailableBalance {
+				fmt.Printf("\nYou have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
+				return
+			} else {
+				fmt.Printf("\n%s balance is unavailable\n\n", balance.Currency)
+				return
+			}
 		}
 	}
+
+	fmt.Printf("\nNo balance found for %s\n\n", currency)
 }
