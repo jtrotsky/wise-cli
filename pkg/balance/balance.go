@@ -156,16 +156,21 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 
 func (accounts Accounts) printBalance(currency string) {
 	for _, balance := range accounts.Balances {
-		if balance.Currency == currency {
-			if balance.Type == AvailableBalance {
-				fmt.Printf("\nYou have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
-				return
-			} else {
-				fmt.Printf("\n%s balance is unavailable\n\n", balance.Currency)
-				return
+		if balance.Type == AvailableBalance {
+			if currency != "" {
+				if balance.Currency == currency {
+					fmt.Printf("You have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
+					return
+				} else {
+					fmt.Printf("%s balance unavailable\n\n", currency)
+					return
+				}
 			}
+
+			if balance.Amount.Value > 0 {
+				fmt.Printf("- %.2f %s in cash\n", balance.Amount.Value, balance.Amount.Currency)
+			}
+			continue
 		}
 	}
-
-	fmt.Printf("\nNo balance found for %s\n\n", currency)
 }
