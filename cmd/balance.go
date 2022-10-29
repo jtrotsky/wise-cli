@@ -33,13 +33,13 @@ $ wise-cli balance --currency GBP`,
 	}
 
 	bc.cmd.PersistentFlags().StringVar(&bc.client.APIToken, "token", "", "API token")
-	bc.cmd.Flags().StringVar(&bc.currency, "currency", "GBP", "The account currency (e.g. GBP)")
+	bc.cmd.Flags().StringVar(&bc.currency, "currency", "", "The account currency (e.g. GBP)")
 
 	return bc
 }
 
 func (bc *balanceCmd) runBalanceCmd(cmd *cobra.Command, args []string) error {
-	if !util.ValidCurrencyCode(bc.currency) {
+	if bc.currency != "" && !util.ValidCurrencyCode(bc.currency) {
 		return errors.New("invalid currency code, format like: GBP")
 	}
 
