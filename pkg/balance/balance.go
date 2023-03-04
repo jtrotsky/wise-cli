@@ -165,7 +165,7 @@ func (accounts Accounts) printBalance(currency string) {
 			}
 
 			if balance.Amount.Value > 0 {
-				fmt.Printf("You have %.2f %s in cash\n", balance.Amount.Value, balance.Amount.Currency)
+				fmt.Printf("You have %.2f %s in cash\n\n", balance.Amount.Value, balance.Amount.Currency)
 			}
 			continue
 		}

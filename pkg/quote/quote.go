@@ -131,7 +131,7 @@ func (q *Quote) Create(client *client.Client) error {
 
 	fmt.Printf("\nQuote for %.0f %s to %s at 1=%f",
 		q.SourceAmount, q.SourceCurrency, q.TargetCurrency, q.Rate)
-	fmt.Printf("\n -> %.2f %s would arrive in %.0fh",
+	fmt.Printf("\n -> %.2f %s would arrive in %.0fh\n\n",
 		q.PaymentOptions[0].TargetAmount, q.TargetCurrency, deliveryTime.Hours())
 
 	return nil
