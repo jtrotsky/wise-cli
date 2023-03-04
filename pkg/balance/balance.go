@@ -145,9 +145,6 @@ func Get(client *client.Client, currency string) ([]Accounts, error) {
 		return accounts, err
 	}
 
-	// DEBUG
-	// log.Println(accounts)
-
 	// TODO: [0] is filthy
 	accounts[0].printBalance(currency)
 
@@ -168,7 +165,7 @@ func (accounts Accounts) printBalance(currency string) {
 			}
 
 			if balance.Amount.Value > 0 {
-				fmt.Printf("- %.2f %s in cash\n", balance.Amount.Value, balance.Amount.Currency)
+				fmt.Printf("You have %.2f %s in cash\n", balance.Amount.Value, balance.Amount.Currency)
 			}
 			continue
 		}
