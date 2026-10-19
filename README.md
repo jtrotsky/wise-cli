@@ -1,3 +1,12 @@
+> **Unmaintained.** The last functional change here was March 2023. It has not been
+> tested against the Wise API since, the `recipient` and `webhook` commands were never
+> finished, and its dependencies (Go 1.16, cobra 1.1.3, viper 1.7.1) are years out of
+> support. Treat it as a read-only example of calling the Wise API from Go, not as a
+> working tool. Not affiliated with or endorsed by Wise.
+>
+> Note that the example below passes an API token as a command-line argument, which
+> leaves it in shell history and the process table. Read it from the environment instead.
+
 ## wise-cli
 
 ### why
